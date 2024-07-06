@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const ms = require("ms");
-const temporos = require("temporos");
+const schedule = require("node-schedule");
 const req = require("request-promise");
 const ejs = require("ejs");
 const fs = require("fs");
@@ -15,11 +15,14 @@ class CursoriMailer {
   constructor(config) {
     exports.config = config;
     this.config = config;
-    var funcs = config.functions
+    var funcs = config.functions;
     funcs.forEach(function (item, index, array) {
-      temporos.scheduleTask(config.functions[index], null, {
-        timesOfDay: [config.times[index]],
-      });
+      var rawTimes = config.times[index];
+      var times = rawTimes.split(":");
+      const rule = new schedule.RecurrenceRule();
+      rule.hour = times[0];
+      rule.minute = times[1];
+      schedule.scheduleJob(rule, funcs[index]);
     });
   }
   send(config) {
@@ -47,7 +50,6 @@ class CursoriDB {
   async add(key, value) {
     var escaped = key.replace(/\./g, "_");
     await db.set(escaped, value).then((val) => {
-      console.log(val);
       return val;
     });
   }
