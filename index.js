@@ -4,10 +4,11 @@ const schedule = require("node-schedule");
 const req = require("request-promise");
 const ejs = require("ejs");
 const fs = require("fs");
-const { parse } = require("rss-to-json");
+let Parser = require('rss-parser');
+let parser = new Parser();
 var config = "";
-const { QuickDB } = require("quick.db");
-const db = new QuickDB();
+const SimplDB = require('simpl.db');
+const db = new SimplDB();
 var luxon = require("luxon");
 var date = luxon.DateTime;
 
@@ -28,6 +29,7 @@ class CursoriMailer {
   send(config) {
     var sysConf = exports.config;
     var transporter = nodemailer.createTransport(sysConf.email);
+    console.log(config.to)
     const options = {
       from: `"${config.name}" <${config.from}>`,
       to: config.to,
@@ -49,30 +51,24 @@ class CursoriMailer {
 class CursoriDB {
   async add(key, value) {
     var escaped = key.replace(/\./g, "_");
-    await db.set(escaped, value).then((val) => {
-      return val;
-    });
+    var val = await db.set(escaped, value)
+    return val
   }
 
   async rem(key) {
     var escaped = key.replace(/\./g, "_");
-    await db.delete(escaped).then((val) => {
-      return val;
-    });
+    var val = await db.delete(escaped)
+    return val
   }
 
   async get(key) {
     var escaped = key.replace(/\./g, "_");
-    var val = await db.get(escaped).then((val) => {
-      return val;
-    });
+    var val = await db.get(escaped)
     return val;
   }
 
-  async list(key) {
-    var list = await db.all().then((val) => {
-      return val;
-    });
+  async list() {
+    var list = await db.toJSON()
     return list;
   }
 }
@@ -160,7 +156,7 @@ class CursoriUtils {
   }
 
   async parseRss(url) {
-    var rss = await parse(url);
+    let rss = await parser.parseURL(url);
     return rss;
   }
 
