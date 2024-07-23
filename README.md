@@ -1,5 +1,6 @@
 # Cursori Documentation
-Cursori is an easy way to set up an automated email service. Make your own generative code and ship it with Cursori and it's many utilities.
+### Now deprecated, but still usable.
+Cursori is an easy way to set up an automated email service. Make your own generative code and ship it with Cursori and its many utilities.
 
 ## Configuration
 
