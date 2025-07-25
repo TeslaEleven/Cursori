@@ -1,0 +1,16 @@
+{
+  "name": "Cursori Documentation",
+  "short_name": "Cursori",
+  "description": "A powerful email automation library.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ecece7",
+  "theme_color": "#b73a68",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
